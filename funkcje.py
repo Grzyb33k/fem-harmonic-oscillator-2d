@@ -427,3 +427,26 @@ def update_progress(current, total, length=30):
     if current >= total:
         # po zakończeniu — usuń pasek
         clear_output(wait=True)
+
+
+
+def plotState(results, N, L, state=0, resolution=10):
+    c = results[N]["c"][:, state]
+    X, Y, Z = [], [], []
+    xiGrid = np.linspace(-1, 1, resolution)
+
+    for k in range(4*N**2):
+        for xi1 in xiGrid:
+            for xi2 in xiGrid:
+                x = calcX(xi1, xi2, k, L, N) * 0.05292
+                y = calcY(xi1, xi2, k, L, N) * 0.05292
+                val = 0
+                for i in range(0, 9):
+                    cIdx = nlg(k, i, N) - 1
+                    val += c[cIdx] * h[i](xi1, xi2)
+                
+                X.append(x)
+                Y.append(y)
+                Z.append(val)
+
+    return X, Y, Z
